@@ -36,7 +36,7 @@ In your GitHub Project, create a new field named `Date Created`. This is where t
 
 _Note: The field can be named whatever you want. Just update the `FIELD_NAME` in the `.env` accordingly._
 
-## Setup Instructions
+## How to Use
 
 ### 1. Run setup.sh
 

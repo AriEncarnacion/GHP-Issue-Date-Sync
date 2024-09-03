@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+import pytz
 import requests
 from dotenv import load_dotenv
 
@@ -16,9 +17,9 @@ graphql_url = "https://api.github.com/graphql"
 graphql_headers = {"Authorization": f"Bearer {TOKEN}"}
 
 
-def update_project_field(issue_id, created_at_date):
+def update_project_field(issue_id, created_at):
     mutation = update_issue_date_query(
-        PROJECT_NODE_ID, issue_id, FIELD_NODE_ID, created_at_date
+        PROJECT_NODE_ID, issue_id, FIELD_NODE_ID, created_at
     )
     update_response = requests.post(graphql_url, json=mutation, headers=graphql_headers)
     if update_response.status_code == 200:
@@ -33,18 +34,17 @@ def update_project_field(issue_id, created_at_date):
 def process_issue(item):
     if item["content"]["__typename"] == "Issue":
         issue_id = item["id"]
+        issue_number = item["content"]["number"]
+        issue_title = item["content"]["title"]
         created_at = item["content"]["createdAt"]
-        created_at_date = datetime.strptime(created_at, "%Y-%m-%dT%H:%M:%SZ").strftime(
-            "%Y-%m-%d"
-        )
 
-        if update_project_field(issue_id, created_at_date):
+        if update_project_field(issue_id, created_at):
             print(
-                f'Successfully updated issue #{item["content"]["number"]} with created_at date {created_at_date}'
+                f'Successfully updated issue #{issue_number}, "{issue_title}" with created_at date {created_at}'
             )
         else:
             print(
-                f'Failed to update issue #{item["content"]["number"]}. Moving to next issue.'
+                f'Failed to update issue #{issue_number}, "{issue_title}". Moving to next issue.'
             )
 
 

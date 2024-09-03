@@ -29,7 +29,7 @@ def get_issues_query(project_node_id, end_cursor=None):
     }
 
 
-def update_issue_date_query(project_node_id, issue_id, field_node_id, created_at_date):
+def update_issue_date_query(project_node_id, issue_id, field_node_id, created_at):
     return {
         "query": f"""
         mutation {{
@@ -39,7 +39,7 @@ def update_issue_date_query(project_node_id, issue_id, field_node_id, created_at
                     itemId: "{issue_id}"
                     fieldId: "{field_node_id}"
                     value: {{
-                        date: "{created_at_date}"
+                        date: "{created_at}"
                     }}
                 }}
             ) {{

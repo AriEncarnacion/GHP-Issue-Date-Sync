@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Function to handle errors and exit
 handle_error() {
     echo "Error: $1"
     exit 1
@@ -11,7 +10,6 @@ IFS= read -r -p "Enter your GitHub Organization: " GITHUB_ORG
 IFS= read -r -p "Enter your Project Title: " PROJECT_TITLE
 IFS= read -r -p "Enter the Date Created Field Name: " FIELD_NAME
 
-# Create the .env file
 cat <<EOF > .env
 # Global config items
 TOKEN="$TOKEN"
@@ -72,11 +70,9 @@ field_response=$(gh api graphql -f query="
 field_id=$(echo $field_response | jq -r --arg field_name "$FIELD_NAME" '.data.node.fields.nodes[] | select(.name == $field_name) | .id')
 [ -z "$field_id" ] && handle_error "Field ID not found. Please check your Field Name."
 
-# Update the .env file with the retrieved Node IDs
 sed -i '' "s/^FIELD_NODE_ID=.*/FIELD_NODE_ID=\"$field_id\"/" .env || handle_error "Failed to update FIELD_NODE_ID in .env file."
 sed -i '' "s/^PROJECT_NODE_ID=.*/PROJECT_NODE_ID=\"$project_id\"/" .env || handle_error "Failed to update PROJECT_NODE_ID in .env file."
 
-# Display the final .env file if everything succeeds
 echo ""
 echo "The .env file has been updated with the necessary Node IDs:"
 echo "---------------------------------------------------------"

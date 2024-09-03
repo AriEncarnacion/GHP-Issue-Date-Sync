@@ -14,13 +14,13 @@ project_response=$(gh api graphql -f query="
     }
   }")
 
-PROJECT_NODE_ID=$(echo $project_response | jq -r --arg title "$PROJECT_TITLE" '.data.organization.projectsV2.nodes[] | select(.title == $title) | .id')
+project_id=$(echo $project_response | jq -r --arg title "$PROJECT_TITLE" '.data.organization.projectsV2.nodes[] | select(.title == $title) | .id')
 
-echo "Project Node ID: $PROJECT_NODE_ID"
+echo "Project Node ID: $project_id"
 
 field_response=$(gh api graphql -f query="
   query {
-    node(id: \"${PROJECT_NODE_ID}\") {
+    node(id: \"${project_id}\") {
       ... on ProjectV2 {
         fields(first: 100) {
           nodes {
@@ -42,6 +42,6 @@ field_response=$(gh api graphql -f query="
     }
   }")
 
-FIELD_NODE_ID=$(echo $field_response | jq -r --arg field_name "$FIELD_NAME" '.data.node.fields.nodes[] | select(.name == $field_name) | .id')
+field_id=$(echo $field_response | jq -r --arg field_name "$FIELD_NAME" '.data.node.fields.nodes[] | select(.name == $field_name) | .id')
 
-echo "Field Node ID for Field Name '$FIELD_NAME': $FIELD_NODE_ID"
+echo "'$FIELD_NAME' Field Node ID: $field_id"

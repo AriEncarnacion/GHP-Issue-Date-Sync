@@ -9,6 +9,9 @@ Currently, GitHub Project users can't sort or filter Issues in GitHub Projects b
 1. Pulls all issues from a specified GitHub Project.
 2. Updates a custom `Date Created` field in the project with each issue's `created_at` date.
 
+## Known Bugs
+1. Date Created date gets translated incorrectly by <= 1 day. I assume this is because of some time zone translation issue.
+
 ## Prerequisites
 
 ### 1. Obtain a GitHub Personal Access Token
